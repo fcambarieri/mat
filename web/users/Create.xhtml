@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateUsersTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="3">
+                    
+                    <h:outputLabel value="#{bundle.CreateUsersLabel_firstName}" for="firstName" />
+                    <h:inputText id="firstName" value="#{registrationBean.firstName}" title="#{bundle.CreateUsersTitle_firstName}" />
+                    <p:message for="firstName" />
+                    
+                    <h:outputLabel value="#{bundle.CreateUsersLabel_lastName}" for="lastName" />
+                    <h:inputText id="lastName" value="#{registrationBean.lastName}" title="#{bundle.CreateUsersTitle_lastName}" />
+                    <p:message for="lastName" />
+                    
+                    <h:outputLabel value="#{bundle.CreateUsersLabel_email}" for="email" />
+                    <h:inputText id="email" value="#{registrationBean.email}" title="#{bundle.CreateUsersTitle_email}" />
+                    <p:message for="email" />
+                     
+                    <h:outputLabel value="#{bundle.CreateUsersLabel_password}" for="password" />
+                    <h:inputSecret id="password" value="#{registrationBean.password}" title="#{bundle.CreateUsersTitle_password}" />
+                    <p:message for="password" />
+                    
+                    <h:outputLabel value="#{bundle.CreateUsersLabel_repassword}" for="repassword" />
+                    <h:inputSecret id="repassword" value="#{registrationBean.repassword}" title="#{bundle.CreateUsersTitle_repassword}" />
+                    <p:message for="repassword" />
+                    
+<!--                     <h:outputLabel value="#{bundle.TermsAndConditions}" for="termsAndCondition" />
+                     <p:selectBooleanCheckbox id="termsAndCondition" value="#{registrationBean.termsAndCondition}" />  
+                    <p:message for="termsAndCondition" />-->
+                    
+                    
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{registrationBean.create}" value="#{bundle.CreateUsersSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{usersBean.prepareList}" value="#{bundle.CreateUsersShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateUsersIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

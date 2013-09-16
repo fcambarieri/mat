@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditUsersTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditUsersLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{usersBean.selected.id}" title="#{bundle.EditUsersTitle_id}" />
+                    <h:outputLabel value="#{bundle.EditUsersLabel_email}" for="email" />
+                    <h:inputText id="email" value="#{usersBean.selected.email}" title="#{bundle.EditUsersTitle_email}" />
+                    <h:outputLabel value="#{bundle.EditUsersLabel_password}" for="password" />
+                    <h:inputText id="password" value="#{usersBean.selected.password}" title="#{bundle.EditUsersTitle_password}" />
+                    <h:outputLabel value="#{bundle.EditUsersLabel_firstName}" for="firstName" />
+                    <h:inputText id="firstName" value="#{usersBean.selected.firstName}" title="#{bundle.EditUsersTitle_firstName}" />
+                    <h:outputLabel value="#{bundle.EditUsersLabel_lastName}" for="lastName" />
+                    <h:inputText id="lastName" value="#{usersBean.selected.lastName}" title="#{bundle.EditUsersTitle_lastName}" />
+                    <h:outputLabel value="#{bundle.EditUsersLabel_creationDate}" for="creationDate" />
+                    <h:inputText id="creationDate" value="#{usersBean.selected.creationDate}" title="#{bundle.EditUsersTitle_creationDate}" >
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditUsersLabel_lastModifiedDate}" for="lastModifiedDate" />
+                    <h:inputText id="lastModifiedDate" value="#{usersBean.selected.lastModifiedDate}" title="#{bundle.EditUsersTitle_lastModifiedDate}" >
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditUsersLabel_status}" for="status" />
+                    <h:inputText id="status" value="#{usersBean.selected.status}" title="#{bundle.EditUsersTitle_status}" />
+                </h:panelGrid>
+                <h:commandLink action="#{usersBean.update}" value="#{bundle.EditUsersSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditUsersViewLink}"/>
+                <br />
+                <h:commandLink action="#{usersBean.prepareList}" value="#{bundle.EditUsersShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditUsersIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
