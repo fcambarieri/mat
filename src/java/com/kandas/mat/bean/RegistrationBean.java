@@ -111,7 +111,7 @@ public class RegistrationBean {
             current.setLastModifiedDate(current.getCreationDate());
             current.setStatus(UserStatus.PENDING_VALIDATION);
             getUsersService().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("RegistrationOk"));
             return "/registration/registrationOk.xhtml";
         } catch (ValidationException e) {
              JsfUtil.addErrorMessage(e, e.getMessage());
