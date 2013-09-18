@@ -34,4 +34,19 @@ public class UsersService extends AbstractService<User>{
         
         return user;
     }
+    
+    public User findByVerificationCode(String code) {
+        User user = null;
+        EntityManager em = getEntityManager();
+        try {
+            Query query = getEntityManager().createQuery("select u from User u where u.verificationCode = :code").setParameter("code", code);
+            user = (User) query.getSingleResult();
+        } catch (NoResultException e) {
+            
+        } finally {
+            em.close();
+        }
+        
+        return user;
+    }
 }

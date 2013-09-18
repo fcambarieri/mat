@@ -16,7 +16,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.transaction.Transaction;
 
 /**
  *
@@ -47,6 +49,34 @@ public abstract class AbstractService<T> implements Serializable {
             em.persist(entity);
             em.getTransaction().commit();
         } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    public interface OnTransaction<T> {
+        void on(T value);
+    } 
+            
+    public void create(T entity, OnTransaction onTransaction) {
+        EntityManager em = null;
+        EntityTransaction tranx = null;
+        try {
+            em = getEntityManager();
+            tranx = em.getTransaction();
+            tranx.begin();
+            em.persist(entity);
+            if (onTransaction != null) {
+                onTransaction.on(entity);
+            }
+            tranx.commit();
+        } catch (Exception e) {
+            if (tranx != null) {
+                tranx.setRollbackOnly();
+            }
+            throw new RuntimeException("Cound not create entity",e);
+        } finally {
+            
             if (em != null) {
                 em.close();
             }

@@ -32,6 +32,7 @@ public class User implements Serializable {
     private Date creationDate;
     private Date lastModifiedDate;
     private UserStatus status;
+    private String verificationCode;
     
     
     @Id
@@ -126,6 +127,14 @@ public class User implements Serializable {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String validationCode) {
+        this.verificationCode = validationCode;
     }
     
 }

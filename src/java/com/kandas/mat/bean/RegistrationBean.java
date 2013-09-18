@@ -8,14 +8,17 @@ package com.kandas.mat.bean;
  *
  * @author sabon
  */
+import com.kandas.emails.EmailManager;
 import com.kandas.mat.bean.util.JsfUtil;
 import com.kandas.mat.domains.User;
 import com.kandas.mat.domains.UserStatus;
+import com.kandas.mat.services.AbstractService;
 import com.kandas.mat.services.UsersService;
 import com.kandas.mat.services.exceptions.UniqueEmailConstraintException;
 import com.kandas.mat.services.exceptions.ValidationException;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import javax.faces.bean.ManagedBean;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Pattern;
@@ -109,8 +112,17 @@ public class RegistrationBean {
             current.setPassword(password);
             current.setCreationDate(new Date());
             current.setLastModifiedDate(current.getCreationDate());
+            current.setVerificationCode(generateCodeRegistration());
             current.setStatus(UserStatus.PENDING_VALIDATION);
-            getUsersService().create(current);
+            getUsersService().create(current, new AbstractService.OnTransaction<User>() {
+
+                @Override
+                public void on(User value) {
+                    sendEmail(value);
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
+            
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("RegistrationOk"));
             return "/registration/registrationOk.xhtml";
         } catch (ValidationException e) {
@@ -148,5 +160,22 @@ public class RegistrationBean {
 
     public void setTermsAndCondition(boolean termsAndCondition) {
         this.termsAndCondition = termsAndCondition;
+    }
+    
+    private String generateCodeRegistration () {
+        return UUID.randomUUID().toString();
+    }
+    
+    private String generateEmailBody(User user) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello " + user.getLastName());
+        sb.append("\n");
+        sb.append("Confirm your account: ");
+        sb.append("http://localhost:8080/mat/registration/validate?code="+user.getVerificationCode());
+        return sb.toString();
+    }
+    
+    private void sendEmail(User user) {
+        EmailManager.sendEmail("Mat - Email confirmation", user.getEmail(), generateEmailBody(user));
     }
 }
