@@ -8,6 +8,8 @@ package com.kandas.mat.bean;
  *
  * @author sabon
  */
+import com.kandas.emails.EmailBuilder;
+import com.kandas.emails.EmailFactory;
 import com.kandas.emails.EmailManager;
 import com.kandas.mat.bean.util.JsfUtil;
 import com.kandas.mat.domains.User;
@@ -20,18 +22,22 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.faces.bean.ManagedBean;
-import javax.validation.constraints.AssertTrue;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import org.openide.util.Lookup;
  
 /**
  *
  * @author sabon
  */
 @ManagedBean(name = "registrationBean")
+@RequestScoped
 public class RegistrationBean {
  
-    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
+    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "{bundle.NotValidEmail}")
     private String email;
     
     @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
@@ -119,19 +125,22 @@ public class RegistrationBean {
                 @Override
                 public void on(User value) {
                     sendEmail(value);
-                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             });
             
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("RegistrationOk"));
-            return "/registration/registrationOk.xhtml";
+            return "/registration/registrationOk.xhtml?faces-redirect=true";
         } catch (ValidationException e) {
              JsfUtil.addErrorMessage(e, e.getMessage());
              return null;
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            //JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
+    }
+    
+    public String getCreatedMessage() {
+        return ResourceBundle.getBundle("/Bundle").getString("RegistrationOk");
     }
     
     private void validateRegistration() {
@@ -162,20 +171,27 @@ public class RegistrationBean {
         this.termsAndCondition = termsAndCondition;
     }
     
-    private String generateCodeRegistration () {
+    public static String generateCodeRegistration () {
         return UUID.randomUUID().toString();
     }
     
-    private String generateEmailBody(User user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Hello " + user.getLastName());
-        sb.append("\n");
-        sb.append("Confirm your account: ");
-        sb.append("http://localhost:8080/mat/registration/validate?code="+user.getVerificationCode());
-        return sb.toString();
-    }
+//    private String generateEmailBody(User user) {
+//        Email
+////        StringBuilder sb = new StringBuilder();
+////        sb.append("Hello " + user.getLastName());
+////        sb.append("\n");
+////        sb.append("Confirm your account: ");
+////        sb.append("http://localhost:8080/mat/registration/validate?code="+user.getVerificationCode());
+////        return sb.toString();
+//    }
     
     private void sendEmail(User user) {
-        EmailManager.sendEmail("Mat - Email confirmation", user.getEmail(), generateEmailBody(user));
+              
+        EmailBuilder builder = EmailFactory.createEmailBuilder(EmailBuilder.EmailKey.REGISTRATION);
+        builder.addParams("##TITLE##", user.getLastName());
+        builder.addParams("##URI##", "http://localhost:8080/mat/registration/validate?code="+user.getVerificationCode());
+        builder.addParams("##LINK_NAME##", "Codes");
+        String body = builder.createEmail(null);
+        EmailManager.sendEmail("Mat - Email confirmation", user.getEmail(), body);
     }
 }

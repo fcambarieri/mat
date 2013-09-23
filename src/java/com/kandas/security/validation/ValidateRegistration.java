@@ -4,7 +4,7 @@
  */
 package com.kandas.security.validation;
 
-import com.kandas.mat.bean.ValidateRegistrationBean;
+import com.kandas.mat.bean.RegistrationTokenBean;
 import com.kandas.mat.domains.User;
 import com.kandas.mat.domains.UserStatus;
 import com.kandas.mat.services.UsersService;
@@ -42,7 +42,7 @@ public class ValidateRegistration extends HttpServlet {
         try {
            String code = request.getParameter("code");
            if ("".equals(code) || code == null) {
-               //TODO: do something
+               response.sendRedirect(request.getContextPath() + "/registration/registrationToken.jsf");
            }
             UsersService service = new UsersService();
             User user = service.findByVerificationCode(code);
@@ -56,11 +56,15 @@ public class ValidateRegistration extends HttpServlet {
                         response.sendRedirect(request.getContextPath() + "/users/View.jsf");
                        
                     } catch (NonexistentEntityException ex) {
-                        Logger.getLogger(ValidateRegistrationBean.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RegistrationTokenBean.class.getName()).log(Level.SEVERE, null, ex);
+                         response.sendRedirect(request.getContextPath() + "/registration/registrationToken.jsf");
                     } catch (Exception ex) {
-                        Logger.getLogger(ValidateRegistrationBean.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RegistrationTokenBean.class.getName()).log(Level.SEVERE, null, ex);
+                         response.sendRedirect(request.getContextPath() + "/registration/registrationToken.jsf");
                     }
                 }
+            } else {
+               response.sendRedirect(request.getContextPath() + "/registration/registrationToken.jsf");
             }
             
            
