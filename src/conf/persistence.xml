@@ -3,6 +3,15 @@
   <persistence-unit name="matPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>com.kandas.mat.domains.User</class>
+    <class>com.kandas.mat.domains.tournaments.Tournament</class>
+    <class>com.kandas.mat.domains.tournaments.Belt</class>
+    <class>com.kandas.mat.domains.tournaments.Category</class>
+    <class>com.kandas.mat.domains.tournaments.Subcategory</class>
+    <class>com.kandas.mat.domains.tournaments.Team</class>
+    <class>com.kandas.mat.domains.tournaments.Country</class>
+    <class>com.kandas.mat.domains.tournaments.TeamPlayer</class>
+    <class>com.kandas.mat.domains.tournaments.TournamentInscription</class>
+    <class>com.kandas.mat.domains.tournaments.TeamPlayerInscription</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="postgres"/>
